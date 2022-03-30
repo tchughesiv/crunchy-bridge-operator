@@ -35,6 +35,7 @@ import (
 	"k8s.io/client-go/util/workqueue"
 	"k8s.io/utils/pointer"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/builder"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/event"
@@ -310,8 +311,11 @@ func (r *DBaaSProviderReconciler) SetupWithManager(mgr ctrl.Manager) error {
 
 	return ctrl.NewControllerManagedBy(mgr).
 		WithOptions(controller.Options{RateLimiter: customRateLimiter}).
-		For(&v1.Deployment{}).
-		WithEventFilter(r.ignoreOtherDeployments()).
+		For(
+			&v1.Deployment{},
+			builder.WithPredicates(r.ignoreOtherDeployments()),
+			builder.OnlyMetadata,
+		).
 		Complete(r)
 }
 

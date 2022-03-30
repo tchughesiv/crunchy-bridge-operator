@@ -1,0 +1,7 @@
+{
+  "gopls": {
+    "gopls.env": {
+      "GOFLAGS": "-tags=dbaas",
+    },
+  }
+}

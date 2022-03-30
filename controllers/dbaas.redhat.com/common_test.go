@@ -57,10 +57,7 @@ func assertResourceCreation(object client.Object) func() {
 		By("checking the resource created")
 		Eventually(func() bool {
 			err := k8sClient.Get(ctx, client.ObjectKeyFromObject(object), object)
-			if err != nil {
-				return false
-			}
-			return true
+			return err == nil
 		}, timeout, interval).Should(BeTrue())
 	}
 }
